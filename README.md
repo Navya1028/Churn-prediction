@@ -1,4 +1,4 @@
-# 📡 Telecom Customer Churn Prediction
+#  Telecom Customer Churn Prediction
 
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://python.org)
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0-orange)](https://xgboost.readthedocs.io)
@@ -9,7 +9,7 @@
 
 ---
 
-## 🎯 Problem Statement
+##  Problem Statement
 
 Customer churn costs telecom companies 5–25× more than retaining existing customers. This project builds a churn classifier that identifies at-risk customers **before** they leave, enabling targeted retention campaigns.
 
@@ -17,7 +17,7 @@ Customer churn costs telecom companies 5–25× more than retaining existing cus
 
 ---
 
-## 📊 Results (on held-out test set)
+##  Results (on held-out test set)
 
 | Model | Recall | F1 | ROC-AUC | Threshold |
 |---|---|---|---|---|
@@ -26,7 +26,7 @@ Customer churn costs telecom companies 5–25× more than retaining existing cus
 
 ---
 
-## 🔧 Improvements Over the Baseline Notebook
+##  Improvements Over the Baseline Notebook
 
 | Area | Baseline | This project |
 |---|---|---|
@@ -40,7 +40,7 @@ Customer churn costs telecom companies 5–25× more than retaining existing cus
 
 ---
 
-## 🧪 Feature Engineering
+##  Feature Engineering
 
 | Feature | Formula | Rationale |
 |---|---|---|
@@ -52,7 +52,7 @@ Customer churn costs telecom companies 5–25× more than retaining existing cus
 
 ---
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 churn-prediction/
@@ -75,7 +75,7 @@ churn-prediction/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone & install
 
@@ -107,7 +107,7 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-## 📈 Dashboard Features
+##  Dashboard Features
 
 **Predict tab** — Input form → real-time churn probability + risk level + SHAP waterfall explanation + personalised retention tips
 
@@ -117,7 +117,7 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-## 🔍 Key Findings from EDA
+##  Key Findings from EDA
 
 - **Month-to-month contracts** churn at ~42% vs ~11% for two-year contracts
 - **Fiber optic** customers churn at nearly 3× the rate of DSL customers
@@ -127,13 +127,13 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 Python · scikit-learn · XGBoost · SHAP · Streamlit · Pandas · NumPy · Matplotlib · Seaborn
 
 ---
 
-## 📚 Dataset
+##  Dataset
 
 IBM Watson Telco Customer Churn — 7,043 customers, 21 features.
 Source: [Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn)
