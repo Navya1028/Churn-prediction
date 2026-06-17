@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import shap, pickle, os
 
-st.set_page_config(page_title="Churn Predictor", page_icon="📡", layout="wide")
+st.set_page_config(page_title="Churn Predictor", layout="wide")
 
 # ── Load artifacts ─────────────────────────────────────────────────────────────
 # ── Load artifacts ─────────────────────────────────────────────────────────────
@@ -47,7 +47,7 @@ page = st.sidebar.radio("Go to", ["Predict", "EDA", "Model Info"])
 # ==============================================================================
 # PAGE 1 — PREDICT
 # ==============================================================================
-if page == " Predict":
+if page == "Predict":
     st.title("Customer Churn Prediction")
     st.markdown("Fill in the customer profile below to get a real-time churn probability.")
 
