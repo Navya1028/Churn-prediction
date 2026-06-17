@@ -6,6 +6,9 @@
 [![SHAP](https://img.shields.io/badge/SHAP-Explainability-brightgreen)](https://shap.readthedocs.io)
 
 > End-to-end ML pipeline to predict telecom customer churn — with hyperparameter tuning, SHAP explainability, threshold optimisation, and an interactive Streamlit dashboard.
+## Live Demo
+
+https://churn-prediction-xhsrebkrpkrfgrcsczir7m.streamlit.app/
 
 ---
 
