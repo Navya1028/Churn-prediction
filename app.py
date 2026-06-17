@@ -16,17 +16,20 @@ st.set_page_config(page_title="Churn Predictor", page_icon="📡", layout="wide"
 # ── Load artifacts ─────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
-    with open(r"D:\telco customer churn\customer_churn_model.pkl", "rb") as f:
+    with open("customer_churn_model.pkl", "rb") as f:
         model_data = pickle.load(f)
-    with open(r"D:\telco customer churn\encoders.pkl", "rb") as f:
+
+    with open("encoders.pkl", "rb") as f:
         encoders = pickle.load(f)
-    with open(r"D:\telco customer churn\shap_explainer.pkl", "rb") as f:
+
+    with open("shap_explainer.pkl", "rb") as f:
         explainer = pickle.load(f)
+
     return model_data, encoders, explainer
 
 @st.cache_data
 def load_raw():
-    df = pd.read_csv(r"D:\telco customer churn\telco_customerchurn.csv")
+    df = pd.read_csv("telco_customerchurn.csv")
     df["TotalCharges"] = df["TotalCharges"].replace({" ": "0.0"}).astype(float)
     df["Churn_num"] = df["Churn"].map({"Yes": 1, "No": 0})
     return df
