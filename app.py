@@ -61,7 +61,7 @@ page = st.sidebar.radio("Go to", ["Predict", "EDA", "Model Info"])
 # ==============================================================================
 # PAGE 1 — PREDICT
 # ==============================================================================
-if page == " Predict":
+if page == "Predict":
     st.title("Customer Churn Prediction")
     st.markdown("Fill in the customer profile below to get a real-time churn probability.")
 
