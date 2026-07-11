@@ -9,27 +9,42 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import shap, pickle, os
+import anthropic
 
-st.set_page_config(page_title="Churn Predictor", layout="wide")
+st.set_page_config(page_title="Churn Predictor", page_icon="📡", layout="wide")
+
+# ── GenAI retention note ─────────────────────────────────────────────────────
+def generate_retention_note(top_features):
+    """Turn top SHAP features into a plain-English retention action."""
+    client = anthropic.Anthropic(api_key=st.secrets["ANTHROPIC_API_KEY"])
+    prompt = (
+        f"A telecom customer is predicted to churn. The top drivers pushing "
+        f"them toward churn are: {top_features}. "
+        f"Write a 2-sentence retention action for the account manager. "
+        f"Be specific and practical, no generic advice."
+    )
+    msg = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=150,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return msg.content[0].text
 
 # ── Load artifacts ─────────────────────────────────────────────────────────────
 # ── Load artifacts ─────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
-    with open("customer_churn_model.pkl", "rb") as f:
+    with open(r"D:\telco customer churn\customer_churn_model.pkl", "rb") as f:
         model_data = pickle.load(f)
-
-    with open("encoders.pkl", "rb") as f:
+    with open(r"D:\telco customer churn\encoders.pkl", "rb") as f:
         encoders = pickle.load(f)
-
-    with open("shap_explainer.pkl", "rb") as f:
+    with open(r"D:\telco customer churn\shap_explainer.pkl", "rb") as f:
         explainer = pickle.load(f)
-
     return model_data, encoders, explainer
 
 @st.cache_data
 def load_raw():
-    df = pd.read_csv("telco_customerchurn.csv")
+    df = pd.read_csv(r"D:\telco customer churn\telco_customerchurn.csv")
     df["TotalCharges"] = df["TotalCharges"].replace({" ": "0.0"}).astype(float)
     df["Churn_num"] = df["Churn"].map({"Yes": 1, "No": 0})
     return df
@@ -47,7 +62,7 @@ page = st.sidebar.radio("Go to", ["Predict", "EDA", "Model Info"])
 # ==============================================================================
 # PAGE 1 — PREDICT
 # ==============================================================================
-if page == "Predict":
+if page == " Predict":
     st.title("Customer Churn Prediction")
     st.markdown("Fill in the customer profile below to get a real-time churn probability.")
 
@@ -139,6 +154,22 @@ if page == "Predict":
         )
         st.pyplot(fig, use_container_width=True)
         plt.close()
+
+        # GenAI-generated retention note (uses the same SHAP values above)
+        if pred:
+            st.subheader("🤖 AI-Generated Retention Note")
+            with st.spinner("Generating recommendation..."):
+                shap_row = pd.Series(shap_vals[0], index=features)
+                top3 = shap_row.abs().sort_values(ascending=False).head(3)
+                top_features_str = ", ".join(
+                    f"{feat} ({'increases' if shap_row[feat] > 0 else 'decreases'} risk)"
+                    for feat in top3.index
+                )
+                try:
+                    note = generate_retention_note(top_features_str)
+                    st.info(note)
+                except Exception as e:
+                    st.warning(f"GenAI note unavailable: {e}")
 
         # Retention tips
         if pred:
