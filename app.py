@@ -154,38 +154,40 @@ if page == "Predict":
         st.pyplot(fig, use_container_width=True)
         plt.close()
 
-        # GenAI-generated retention note (uses the same SHAP values above)
+        # Retention recommendation — GenAI first, rule-based fallback if it fails
         if pred:
-            st.subheader("🤖 AI-Generated Retention Note")
+            st.subheader("💡 Retention Recommendation")
+            shap_row = pd.Series(shap_vals[0], index=features)
+            top3 = shap_row.abs().sort_values(ascending=False).head(3)
+            top_features_str = ", ".join(
+                f"{feat} ({'increases' if shap_row[feat] > 0 else 'decreases'} risk)"
+                for feat in top3.index
+            )
+
+            genai_failed = False
             with st.spinner("Generating recommendation..."):
-                shap_row = pd.Series(shap_vals[0], index=features)
-                top3 = shap_row.abs().sort_values(ascending=False).head(3)
-                top_features_str = ", ".join(
-                    f"{feat} ({'increases' if shap_row[feat] > 0 else 'decreases'} risk)"
-                    for feat in top3.index
-                )
                 try:
                     note = generate_retention_note(top_features_str)
+                    st.success("🤖 AI-Generated")
                     st.info(note)
                 except Exception as e:
-                    st.warning(f"GenAI note unavailable: {e}")
+                    genai_failed = True
+                    st.warning(f"GenAI unavailable ({e}) — showing rule-based recommendation instead.")
 
-        # Retention tips
-        if pred:
-            st.subheader("💡 Retention Recommendations")
-            tips = []
-            if contract == "Month-to-month":
-                tips.append("Offer a discounted 1-year contract to lock in the customer.")
-            if monthly_charges > 80:
-                tips.append("Consider a loyalty discount — charges are above average.")
-            if is_new_customer:
-                tips.append("New customer (<3 months). Trigger an onboarding check-in call immediately.")
-            if num_services <= 2:
-                tips.append("Bundle extra services to increase stickiness.")
-            if not tips:
-                tips.append("Send a personalised retention offer immediately.")
-            for tip in tips:
-                st.markdown(f"- {tip}")
+            if genai_failed:
+                tips = []
+                if contract == "Month-to-month":
+                    tips.append("Offer a discounted 1-year contract to lock in the customer.")
+                if monthly_charges > 80:
+                    tips.append("Consider a loyalty discount — charges are above average.")
+                if is_new_customer:
+                    tips.append("New customer (<3 months). Trigger an onboarding check-in call immediately.")
+                if num_services <= 2:
+                    tips.append("Bundle extra services to increase stickiness.")
+                if not tips:
+                    tips.append("Send a personalised retention offer immediately.")
+                for tip in tips:
+                    st.markdown(f"- {tip}")
 
 # ==============================================================================
 # PAGE 2 — EDA
